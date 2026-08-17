@@ -4,169 +4,293 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Synaxarium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&family=Barlow+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#37352F;
-    --ink-soft:#6B6A65;
-    --ink-faint:#9B9A94;
-    --rubric:#96222B;          /* madder red — manuscript rubrication */
-    --rule:rgba(55,53,47,0.13);
-    --rule-strong:rgba(150,34,43,0.55);
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua","URW Palladio L",Georgia,serif;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --ink:#D8D6D1; --ink-soft:#9B9A94; --ink-faint:#75736E;
-      --rubric:#E08B84;
-      --rule:rgba(255,255,255,0.13);
-      --rule-strong:rgba(224,139,132,0.5);
-    }
-  }
-  html[data-theme="light"]{
-    --ink:#37352F; --ink-soft:#6B6A65; --ink-faint:#9B9A94; --rubric:#96222B;
-    --rule:rgba(55,53,47,0.13); --rule-strong:rgba(150,34,43,0.55);
-  }
-  html[data-theme="dark"]{
-    --ink:#D8D6D1; --ink-soft:#9B9A94; --ink-faint:#75736E; --rubric:#E08B84;
-    --rule:rgba(255,255,255,0.13); --rule-strong:rgba(224,139,132,0.5);
+    --indigo-deep:#141D28;
+    --indigo-panel:#1B2634;
+    --linen:#EDE4D0;
+    --linen-dim:#A7A08E;
+    --madder:#B8483C;
+    --ochre:#C89A3C;
+    --rule:rgba(200,154,60,.32);
+
+    --serif:"Gentium Book Plus","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --util:"Barlow Semi Condensed","Avenir Next Condensed","Helvetica Neue",Arial,sans-serif;
   }
 
-  *{box-sizing:border-box}
-  html,body{height:100%}
+  *{box-sizing:border-box;}
+
+  html,body{height:100%;}
   body{
-    margin:0; background:transparent; color:var(--ink);
-    font-family:var(--sans); font-size:15px; line-height:1.5;
-    -webkit-font-smoothing:antialiased; display:flex;
+    margin:0;
+    background:
+      radial-gradient(120% 90% at 50% 0%, #1D2A3A 0%, var(--indigo-deep) 62%, #0E151E 100%);
+    color:var(--linen);
+    font-family:var(--serif);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px 14px;
+    -webkit-font-smoothing:antialiased;
   }
-  .block{display:flex; flex-direction:column; width:100%; height:100%; padding:14px 16px 10px; min-height:0}
 
-  /* ── masthead ─────────────────────────────── */
-  .masthead{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+  .panel{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    width:min(560px,100%);
+    height:100%;
+    min-height:0;
+    background:linear-gradient(180deg, rgba(255,255,255,.028), rgba(0,0,0,.06));
+    border:1px solid var(--rule);
+    padding:26px 30px 0;
+    overflow:hidden;
+  }
+  /* inner hairline, like a ruled manuscript frame */
+  .panel::before{
+    content:"";
+    position:absolute;
+    inset:6px;
+    border:1px solid rgba(237,228,208,.10);
+    pointer-events:none;
+    z-index:2;
+  }
+
+  /* ── header ─────────────────────────────────────── */
+  .crest{
+    display:block;
+    margin:0 auto 14px;
+    width:22px;height:22px;
+    color:var(--ochre);
+    opacity:.9;
+    flex:none;
+  }
+
   .eyebrow{
-    font-size:9.5px; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--ink-faint); font-weight:600; white-space:nowrap;
+    font-family:var(--util);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    text-align:center;
+    color:var(--linen-dim);
+    margin:0 0 20px;
+    flex:none;
   }
-  .coptic{font-family:var(--serif); font-size:23px; line-height:1.1; letter-spacing:-.01em; font-weight:400}
-  .am{font-size:10px; letter-spacing:.1em; color:var(--rubric); font-weight:600; text-transform:uppercase; white-space:nowrap}
-  .gregorian{margin:3px 0 0; font-size:11.5px; color:var(--ink-soft); letter-spacing:.02em}
-  .divider{
-    height:1px; margin:11px 0 13px; flex:none;
-    background:linear-gradient(to right,var(--rule-strong) 0 34px,var(--rule) 34px);
+  .eyebrow .sep{color:var(--rule);margin:0 .55em;}
+  .eyebrow .mark{color:var(--ochre);}
+
+  /* ── date ───────────────────────────────────────── */
+  .coptic{
+    font-size:clamp(23px,3.9vw,30px);
+    font-weight:400;
+    line-height:1.18;
+    margin:0;
+    flex:none;
+    transition:opacity .5s ease;
+  }
+  .coptic.fading{opacity:0;}
+
+  .ref{
+    font-family:var(--util);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--madder);
+    margin:13px 0 20px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex:none;
+    transition:opacity .5s ease;
+  }
+  .ref.fading{opacity:0;}
+  .ref::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--rule);
   }
 
-  /* ── entry ────────────────────────────────── */
+  /* ── reading ────────────────────────────────────── */
   .scroller{
-    flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
-    padding-left:13px; border-left:1px solid var(--rule);
-    scrollbar-width:thin; scrollbar-color:var(--rule) transparent;
-    mask-image:linear-gradient(to bottom,#000 calc(100% - 26px),transparent 100%);
-    -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 26px),transparent 100%);
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    padding-right:12px;
+    transition:opacity .5s ease;
+    scrollbar-width:thin;
+    scrollbar-color:var(--rule) transparent;
+    mask-image:linear-gradient(to bottom,#000 calc(100% - 30px),transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 30px),transparent 100%);
   }
-  .scroller.at-end{mask-image:none; -webkit-mask-image:none}
-  .scroller::-webkit-scrollbar{width:5px}
-  .scroller::-webkit-scrollbar-thumb{background:var(--rule); border-radius:3px}
+  .scroller.fading{opacity:0;}
+  .scroller.at-end{mask-image:none;-webkit-mask-image:none;}
+  .scroller::-webkit-scrollbar{width:4px;}
+  .scroller::-webkit-scrollbar-thumb{background:var(--rule);}
+  .scroller::-webkit-scrollbar-track{background:transparent;}
 
-  .feast{font-family:var(--serif); color:var(--rubric); font-size:15px; line-height:1.35; margin:0; font-weight:500}
-  .feast + .feast{margin-top:5px}
-  .feasts:not(:empty){margin-bottom:11px}
-
-  .body{font-family:var(--serif); font-size:14.5px; line-height:1.62}
-  .body p{margin:0 0 .8em}
-  .body p:last-child{margin-bottom:0}
-  .body ul,.body ol{margin:0 0 .8em; padding-left:1.15em}
-  .body h1,.body h2,.body h3,.body h4{font-size:14.5px; font-weight:600; color:var(--rubric); margin:0 0 .4em}
-
-  .state{font-family:var(--serif); font-size:14px; color:var(--ink-soft); font-style:italic; margin:0}
-  .skeleton span{
-    display:block; height:9px; border-radius:2px; background:var(--rule);
-    margin-bottom:9px; animation:pulse 1.5s ease-in-out infinite;
+  .feast{
+    font-size:17px;
+    line-height:1.4;
+    color:var(--madder);
+    margin:0;
   }
-  .skeleton span:nth-child(2){width:92%; animation-delay:.12s}
-  .skeleton span:nth-child(3){width:78%; animation-delay:.24s}
-  @keyframes pulse{0%,100%{opacity:.45}50%{opacity:.9}}
+  .feast + .feast{margin-top:6px;}
+  .feasts:not(:empty){margin-bottom:16px;}
 
-  /* ── controls ─────────────────────────────── */
-  .controls{
-    flex:none; display:flex; align-items:center; gap:4px;
-    padding-top:9px; margin-top:9px; border-top:1px solid var(--rule);
+  .reading{
+    font-size:16px;
+    line-height:1.64;
+    color:var(--linen);
+  }
+  .reading p{margin:0 0 .85em;}
+  .reading p:last-child{margin-bottom:0;}
+  .reading ul,.reading ol{margin:0 0 .85em;padding-left:1.2em;}
+  .reading h1,.reading h2,.reading h3,.reading h4{
+    font-size:16px;font-weight:700;color:var(--madder);margin:0 0 .45em;
+  }
+  /* illuminated initial, matching the verse block's drop cap */
+  .reading > p:first-of-type::first-letter{
+    float:left;
+    font-size:3.05em;
+    line-height:.86;
+    padding:.06em .16em 0 0;
+    color:var(--madder);
+    font-weight:700;
+  }
+  .reading > p.state::first-letter{
+    float:none;font-size:inherit;line-height:inherit;
+    padding:0;color:inherit;font-weight:inherit;
+  }
+  .state{
+    font-style:italic;
+    color:var(--linen-dim);
+    margin:0;
+  }
+
+  /* ── controls ───────────────────────────────────── */
+  .bar{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin:18px -30px 0;
+    padding:0 24px;
+    border-top:1px solid var(--rule);
+    flex:none;
   }
   button{
-    font-family:var(--sans); font-size:11px; letter-spacing:.06em;
-    color:var(--ink-soft); background:none; border:0; border-radius:4px;
-    padding:4px 7px; cursor:pointer; transition:background .12s,color .12s;
+    appearance:none;
+    background:none;
+    border:0;
+    color:var(--linen-dim);
+    font-family:var(--util);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    padding:14px 10px;
+    cursor:pointer;
+    transition:color .2s ease;
   }
-  button:hover{background:var(--rule); color:var(--ink)}
-  button:focus-visible{outline:2px solid var(--rubric); outline-offset:1px}
-  .arrow{font-size:14px; line-height:1; padding:3px 8px}
-  .today{text-transform:uppercase; font-weight:600}
-  .today[hidden]{display:none}
-  .spacer{flex:1}
-  .credit{font-size:9.5px; letter-spacing:.05em; color:var(--ink-faint); text-decoration:none; padding:4px 2px}
-  .credit:hover{color:var(--ink-soft); text-decoration:underline}
+  button:hover{color:var(--ochre);}
+  button:focus-visible{
+    outline:1px solid var(--ochre);
+    outline-offset:-4px;
+    color:var(--ochre);
+  }
+  button[hidden]{display:none;}
+  .spacer{flex:1;}
+  .status{
+    font-family:var(--util);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ochre);
+    padding-right:10px;
+    opacity:0;
+    transition:opacity .3s ease;
+    white-space:nowrap;
+  }
+  .status.show{opacity:1;}
 
-  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important}}
-  @media (max-width:340px){.coptic{font-size:20px} .block{padding:12px}}
+  @media (prefers-reduced-motion:reduce){
+    .coptic,.ref,.scroller,.status{transition:none;}
+  }
+  @media (max-width:420px){
+    body{padding:12px 10px;}
+    .panel{padding:22px 20px 0;}
+    .bar{margin:16px -20px 0;padding:0 12px;}
+    button{padding:13px 7px;letter-spacing:.12em;}
+  }
 </style>
 </head>
 <body>
-<div class="block">
-  <header class="masthead">
-    <span class="eyebrow">Synaxarium</span>
-    <span class="coptic" id="coptic">&nbsp;</span>
-    <span class="am" id="am"></span>
-  </header>
-  <p class="gregorian" id="gregorian"></p>
-  <div class="divider"></div>
+
+<main class="panel">
+  <svg class="crest" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
+    <path d="M12 2.5v19M2.5 12h19"/>
+    <circle cx="12" cy="12" r="3.1"/>
+  </svg>
+
+  <p class="eyebrow">
+    <span class="mark">Synaxarium</span>
+    <span class="sep">·</span>
+    <span id="gregorian"></span>
+  </p>
+
+  <h1 class="coptic" id="coptic">&nbsp;</h1>
+  <p class="ref"><span id="am"></span></p>
 
   <div class="scroller" id="scroller">
     <div class="feasts" id="feasts"></div>
-    <div class="body" id="body">
-      <div class="skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
-    </div>
+    <div class="reading" id="reading"></div>
   </div>
 
-  <nav class="controls">
-    <button class="arrow" id="prev" title="Previous day" aria-label="Previous day">&lsaquo;</button>
-    <button class="arrow" id="next" title="Next day" aria-label="Next day">&rsaquo;</button>
-    <button class="today" id="today" hidden>Today</button>
+  <div class="bar">
+    <button id="prev" type="button">Previous</button>
+    <button id="next" type="button">Next</button>
+    <button id="today-btn" type="button" hidden>Today</button>
+    <button id="copy" type="button">Copy</button>
     <span class="spacer"></span>
-    <a class="credit" href="https://github.com/randogoth/coptic-synaxarium" target="_blank" rel="noopener">Source</a>
-  </nav>
-</div>
+    <span class="status" id="status" role="status"></span>
+  </div>
+</main>
 
 <script>
 (function(){
   "use strict";
 
   /* Per-day readings live in ./data/{day}-{Month}.json next to this file.
-     If that folder isn't there, the block falls back to the full-year file on GitHub. */
+     If that folder is missing, the block falls back to the full-year file on GitHub. */
   var DATA_DIR = "data/";
   var FALLBACK = "https://raw.githubusercontent.com/jeninh/synaxarium-api/main/synaxarium.json";
 
   var MONTHS = ["Tout","Baba","Hator","Kiahk","Toba","Amshir","Baramhat",
                 "Baramouda","Bashans","Paona","Epep","Mesra","Nasie"];
 
-  var el = {
-    coptic: document.getElementById("coptic"),
-    am: document.getElementById("am"),
-    gregorian: document.getElementById("gregorian"),
-    feasts: document.getElementById("feasts"),
-    body: document.getElementById("body"),
-    scroller: document.getElementById("scroller"),
-    prev: document.getElementById("prev"),
-    next: document.getElementById("next"),
-    today: document.getElementById("today")
-  };
-
-  /* ?theme=light | ?theme=dark — otherwise follows the OS setting */
-  var theme = new URLSearchParams(location.search).get("theme");
-  if (theme === "light" || theme === "dark") document.documentElement.setAttribute("data-theme", theme);
+  var $coptic    = document.getElementById("coptic");
+  var $am        = document.getElementById("am");
+  var $gregorian = document.getElementById("gregorian");
+  var $feasts    = document.getElementById("feasts");
+  var $reading   = document.getElementById("reading");
+  var $scroller  = document.getElementById("scroller");
+  var $ref       = document.querySelector(".ref");
+  var $prev      = document.getElementById("prev");
+  var $next      = document.getElementById("next");
+  var $todayBtn  = document.getElementById("today-btn");
+  var $copy      = document.getElementById("copy");
+  var $status    = document.getElementById("status");
 
   /* ── Gregorian → Coptic ──────────────────────────────
      Coptic epoch (1 Tout, A.M. 1) = JDN 1825030, i.e. 29 Aug 284 AD Julian.
      Forward:  jdn = 1825029 + 365*(y-1) + floor(y/4) + 30*(m-1) + d
-     Leap years are y % 4 == 3, giving Nasie a sixth day. */
+     Leap years are y % 4 == 3, which gives Nasie a sixth day. */
   function gregorianToJDN(y, m, d){
     var a = Math.floor((14 - m) / 12), yy = y + 4800 - a, mm = m + 12 * a - 3;
     return d + Math.floor((153 * mm + 2) / 5) + 365 * yy
@@ -175,15 +299,15 @@
   function toCoptic(date){
     var t = gregorianToJDN(date.getFullYear(), date.getMonth() + 1, date.getDate()) - 1825030;
     var y = Math.floor(t / 365) + 1;
-    while (365 * (y - 1) + Math.floor(y / 4) > t) y--;      // walk back over accumulated leap days
-    var doy = t - (365 * (y - 1) + Math.floor(y / 4));      // 0-based day of the Coptic year
+    while (365 * (y - 1) + Math.floor(y / 4) > t) y--;   // walk back over accumulated leap days
+    var doy = t - (365 * (y - 1) + Math.floor(y / 4));   // 0-based day of the Coptic year
     var month = Math.floor(doy / 30) + 1;
     return { day: doy % 30 + 1, month: month, monthString: MONTHS[month - 1] || "Nasie", year: y };
   }
 
-  var pad = function(n){ return (n < 10 ? "0" : "") + n; };
-  var iso = function(d){ return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()); };
-  var startOfToday = function(){ var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
+  var pad   = function(n){ return (n < 10 ? "0" : "") + n; };
+  var iso   = function(d){ return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()); };
+  var today = function(){ var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
   var keyOf = function(c){ return c.day + " " + c.monthString; };
 
   /* ── keep only the tags the Synaxarium prose actually uses ── */
@@ -206,8 +330,7 @@
   /* ── loading ── */
   var wholeYear = null;
   function loadEntry(coptic){
-    var file = DATA_DIR + coptic.day + "-" + coptic.monthString + ".json";
-    return fetch(file)
+    return fetch(DATA_DIR + coptic.day + "-" + coptic.monthString + ".json")
       .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
       .catch(function(){
         var load = wholeYear ? Promise.resolve(wholeYear)
@@ -218,55 +341,92 @@
   }
 
   /* ── rendering ── */
-  var current = startOfToday();
+  var current = today();
   var token = 0;
 
+  function fade(on){
+    [$coptic, $ref, $scroller].forEach(function(n){ n.classList.toggle("fading", on); });
+  }
   function checkEnd(){
-    var s = el.scroller;
-    s.classList.toggle("at-end", s.scrollHeight - s.clientHeight - s.scrollTop < 8);
+    $scroller.classList.toggle("at-end",
+      $scroller.scrollHeight - $scroller.clientHeight - $scroller.scrollTop < 8);
+  }
+  function flash(msg){
+    $status.textContent = msg;
+    $status.classList.add("show");
+    clearTimeout(flash.t);
+    flash.t = setTimeout(function(){ $status.classList.remove("show"); }, 1800);
   }
 
-  function renderEntry(entry){
+  function paint(coptic, entry){
+    $coptic.textContent = coptic.day + " " + coptic.monthString;
+    $am.textContent = "A.M. " + coptic.year;
+    $gregorian.textContent = current.toLocaleDateString(undefined,
+      { weekday:"long", month:"long", day:"numeric", year:"numeric" });
+    $todayBtn.hidden = (iso(current) === iso(today()));
+
     var feasts = (entry && entry.feasts) || [];
-    el.feasts.innerHTML = feasts.map(function(f){ return '<p class="feast">' + clean(f) + "</p>"; }).join("");
-    el.body.innerHTML = (entry && entry.description)
+    $feasts.innerHTML = feasts.map(function(f){ return '<p class="feast">' + clean(f) + "</p>"; }).join("");
+    $reading.innerHTML = (entry && entry.description)
       ? clean(entry.description)
-      : '<p class="state">No reading is recorded for this day. Use the arrows to read a neighbouring day.</p>';
-    el.scroller.scrollTop = 0;
+      : '<p class="state">No reading is recorded for this day. Use Previous or Next to read a neighbouring day.</p>';
+    $scroller.scrollTop = 0;
     checkEnd();
   }
 
-  function render(){
+  function render(animate){
     var mine = ++token;
-    var c = toCoptic(current);
+    var coptic = toCoptic(current);
+    if (animate) fade(true);
 
-    el.coptic.textContent = c.day + " " + c.monthString;
-    el.am.textContent = "A.M. " + c.year;
-    el.gregorian.textContent = current.toLocaleDateString(undefined,
-      { weekday:"long", month:"long", day:"numeric", year:"numeric" });
-    el.today.hidden = (iso(current) === iso(startOfToday()));
-    el.feasts.innerHTML = "";
-    el.body.innerHTML = '<div class="skeleton" aria-hidden="true"><span></span><span></span><span></span></div>';
+    var wait = animate
+      ? new Promise(function(r){ setTimeout(r, 240); })
+      : Promise.resolve();
 
-    loadEntry(c).then(
-      function(entry){ if (mine === token) renderEntry(entry); },
-      function(){
+    Promise.all([loadEntry(coptic).catch(function(){ return "error"; }), wait])
+      .then(function(res){
         if (mine !== token) return;
-        el.feasts.innerHTML = "";
-        el.body.innerHTML = '<p class="state">The reading could not be loaded. Check your connection and reload.</p>';
-      }
-    );
+        if (res[0] === "error"){
+          $feasts.innerHTML = "";
+          $reading.innerHTML = '<p class="state">The reading could not be loaded. Check your connection and reload.</p>';
+          $coptic.textContent = coptic.day + " " + coptic.monthString;
+          $am.textContent = "A.M. " + coptic.year;
+        } else {
+          paint(coptic, res[0]);
+        }
+        fade(false);
+      });
   }
 
   function shift(days){
     current = new Date(current.getFullYear(), current.getMonth(), current.getDate() + days);
-    render();
+    render(true);
   }
 
-  el.prev.addEventListener("click", function(){ shift(-1); });
-  el.next.addEventListener("click", function(){ shift(1); });
-  el.today.addEventListener("click", function(){ current = startOfToday(); render(); });
-  el.scroller.addEventListener("scroll", checkEnd, { passive:true });
+  $prev.addEventListener("click", function(){ shift(-1); });
+  $next.addEventListener("click", function(){ shift(1); });
+  $todayBtn.addEventListener("click", function(){ current = today(); render(true); });
+
+  $copy.addEventListener("click", function(){
+    var lines = [$coptic.textContent + " · " + $am.textContent, $gregorian.textContent, ""];
+    Array.prototype.forEach.call($feasts.children, function(p){ lines.push(p.textContent); });
+    lines.push("", ($reading.innerText || $reading.textContent || "").trim());
+    var text = lines.join("\n");
+    var done = function(){ flash("Copied"); };
+    var fail = function(){ flash("Copy failed"); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, fail);
+    } else {
+      try{
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select(); document.execCommand("copy");
+        document.body.removeChild(ta); done();
+      } catch(e){ fail(); }
+    }
+  });
+
+  $scroller.addEventListener("scroll", checkEnd, { passive:true });
   window.addEventListener("resize", checkEnd);
   document.addEventListener("keydown", function(e){
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -276,10 +436,10 @@
 
   /* roll over to the new day if the page is left open overnight */
   setInterval(function(){
-    if (el.today.hidden && iso(current) !== iso(startOfToday())){ current = startOfToday(); render(); }
+    if ($todayBtn.hidden && iso(current) !== iso(today())){ current = today(); render(true); }
   }, 60000);
 
-  render();
+  render(false);
 })();
 </script>
 </body>
